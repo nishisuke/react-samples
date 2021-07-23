@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./App.css";
 import { Dnd } from "pages/dnd";
 import { Realtime } from "pages/realtime";
+import { WebRtc } from "pages/web_rtc";
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
               <li>
                 <Link to="/realtime">realtime</Link>
               </li>
+              <li>
+                <Link to="/webrtc">webrtc</Link>
+              </li>
             </ul>
           </nav>
 
@@ -25,6 +29,9 @@ function App() {
           </Route>
           <Route path="/realtime">
             <Realtime />
+          </Route>
+          <Route path="/webrtc">
+            <WebRtc />
           </Route>
         </div>
       </Router>
