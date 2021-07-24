@@ -1,63 +1,54 @@
-import Pusher, { Channel } from "pusher-js";
-import { useEffect, useRef, useState, VFC } from "react";
+import { useEffect, useMemo, useRef, useState, VFC } from "react";
 
-interface Props {
-  chan: Channel;
-}
-interface Message {
-  text: string;
-  createdAt: Date;
-}
-interface MessageData {
-  message: string;
-}
+import { Subscription, getSubscription, unsubscribe } from "infra/web_socket";
+import { Message } from "interfaces/message";
 
-const pusher = new Pusher("d380e668bc16de80de97", {
-  cluster: "ap3",
-});
 const chanName = "my-channel";
 const evName = "my-event";
-const initMsgs: Message[] = [
-  {
-    text: "Hi!",
-    createdAt: new Date("2021-07-07 13:30"),
-  },
-];
 
 export const Realtime: VFC = () => {
-  const ref = useRef<Channel>(pusher.subscribe(chanName));
-
+  const ref = useRef<Subscription>(getSubscription(chanName));
   useEffect(() => {
-    return () => ref.current.unsubscribe();
+    return () => unsubscribe(chanName);
   }, []);
-
-  return <Messages chan={ref.current} />;
+  return <Messages subscription={ref.current} />;
 };
-const createMessage = (text: string): Message => ({
-  text,
-  createdAt: new Date(),
-});
 
-const Messages: VFC<Props> = ({ chan }) => {
-  const [messages, setMessages] = useState(initMsgs);
-  const [readAt] = useState(new Date());
+interface Props {
+  subscription: Subscription;
+}
+const Messages: VFC<Props> = ({ subscription }) => {
+  const [readAt, setReadAt] = useState(new Date());
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      text: "Hi!",
+      createdAt: new Date("2021-07-07 13:30"),
+    },
+  ]);
 
   useEffect(() => {
-    if (!chan) return () => {};
-    const cb = (data: MessageData) =>
-      setMessages((b) => [...b, createMessage(data.message)]);
-    chan.bind(evName, cb);
-    return () => chan.unbind(evName, cb);
-  }, [chan]);
+    const cb = ({ message }: { message: string }) =>
+      setMessages((b) => [...b, { text: message, createdAt: new Date() }]);
+    subscription.bind(evName, cb);
+    return () => subscription.unbind(evName, cb);
+  }, [subscription]);
 
-  const unreadCount = messages.filter((m) => m.createdAt > readAt).length;
+  const unreadCount = useMemo(
+    () => messages.filter((m) => m.createdAt > readAt).length,
+    [messages, readAt]
+  );
+
+  const read = () => setReadAt(new Date());
 
   return (
     <div>
-      unread count: {unreadCount}
+      <p>unread count: {unreadCount}</p>
+      <button onClick={read}>既読にする</button>
       {messages.map((m, i) => (
-        <div key={i}>
-          {m.createdAt > readAt && "New! "}
+        <div
+          key={i}
+          style={{ color: m.createdAt > readAt ? "red" : "inherit" }}
+        >
           {m.text}
         </div>
       ))}
