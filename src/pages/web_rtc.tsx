@@ -34,7 +34,7 @@ export const WebRtc: VFC = () => {
         value={chan}
         onChange={(e: ChangeEvent<HTMLInputElement>) => setChan(e.target.value)}
       />
-      <video ref={ref} autoPlay />
+      <video ref={ref} autoPlay height="100px" width="100px" />
       {getRemoteStreams().map((v) => (
         <Video key={v.peerId} stream={v} />
       ))}
