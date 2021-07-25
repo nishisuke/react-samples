@@ -4,6 +4,7 @@ import "./App.css";
 import { Dnd } from "pages/dnd";
 import { Realtime } from "pages/realtime";
 import { WebRtc } from "pages/web_rtc";
+import { CardBoard } from "pages/card_board";
 
 function App() {
   return (
@@ -21,6 +22,9 @@ function App() {
               <li>
                 <Link to="/webrtc">webrtc</Link>
               </li>
+              <li>
+                <Link to="/board">dnd card board</Link>
+              </li>
             </ul>
           </nav>
 
@@ -32,6 +36,9 @@ function App() {
           </Route>
           <Route path="/webrtc">
             <WebRtc />
+          </Route>
+          <Route path="/board">
+            <CardBoard />
           </Route>
         </div>
       </Router>
