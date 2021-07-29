@@ -5,15 +5,10 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import styled from "styled-components";
 
 import { Item } from "interfaces/item";
 import { reducer, initialState } from "components/card_board_reducer";
-
-const DropZone = styled.div`
-  min-height: 200px;
-  padding-bottom: 8px;
-`;
+import { Box, Card, CardContent, Paper, Typography } from "@material-ui/core";
 
 export const CardBoard = () => {
   const [{ columns, ordered }, dispatch] = useReducer(reducer, initialState);
@@ -35,52 +30,80 @@ export const CardBoard = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="board" type="COLUMN" direction="horizontal">
         {(listDropProvided) => (
-          <div
-            style={{ display: "flex" }}
+          <Box
+            display="flex"
             ref={listDropProvided.innerRef}
             {...listDropProvided.droppableProps}
           >
             {ordered.map((key, index) => (
               <Draggable key={key} draggableId={key} index={index}>
                 {(listDragProvided) => (
-                  <div
+                  <Paper
+                    sx={{
+                      m: 1,
+                      p: 1,
+                      width: 256,
+                    }}
+                    square
                     ref={listDragProvided.innerRef}
                     {...listDragProvided.draggableProps}
                   >
-                    <div {...listDragProvided.dragHandleProps}>{key}</div>
+                    <Box
+                      sx={{
+                        minHeight: 64,
+                      }}
+                      alignItems="center"
+                      justifyContent="center"
+                      display="flex"
+                      {...listDragProvided.dragHandleProps}
+                    >
+                      <Typography variant="h6">{key}</Typography>
+                    </Box>
+
                     <Droppable droppableId={key} type="QUOTE">
                       {(dropProvided) => (
-                        <div {...dropProvided.droppableProps}>
-                          <DropZone ref={dropProvided.innerRef}>
-                            {columns[key].map((item: Item, index: number) => (
-                              <Draggable
-                                key={item.id}
-                                draggableId={item.id}
-                                index={index}
-                              >
-                                {(dragProvided) => (
-                                  <div
-                                    key={item.id}
-                                    ref={dragProvided.innerRef}
-                                    {...dragProvided.draggableProps}
-                                    {...dragProvided.dragHandleProps}
-                                  >
-                                    <div>{item.content}</div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
-                            {dropProvided.placeholder}
-                          </DropZone>
-                        </div>
+                        <Box
+                          {...dropProvided.droppableProps}
+                          sx={{
+                            minHeight: 256,
+                          }}
+                          ref={dropProvided.innerRef}
+                        >
+                          {columns[key].map((item: Item, index: number) => (
+                            <Draggable
+                              key={item.id}
+                              draggableId={item.id}
+                              index={index}
+                            >
+                              {(dragProvided) => (
+                                <Card
+                                  sx={{
+                                    m: 1,
+                                  }}
+                                  key={item.id}
+                                  ref={dragProvided.innerRef}
+                                  {...dragProvided.draggableProps}
+                                  {...dragProvided.dragHandleProps}
+                                >
+                                  <CardContent>
+                                    <Typography variant="body1">
+                                      {item.content}
+                                    </Typography>
+                                  </CardContent>
+                                </Card>
+                              )}
+                            </Draggable>
+                          ))}
+                          {dropProvided.placeholder}
+                        </Box>
                       )}
                     </Droppable>
-                  </div>
+                  </Paper>
                 )}
               </Draggable>
             ))}
             {listDropProvided.placeholder}
-          </div>
+          </Box>
         )}
       </Droppable>
     </DragDropContext>
