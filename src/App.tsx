@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import "./App.css";
 import { Dnd } from "pages/dnd";
 import { Realtime } from "pages/realtime";
 import { WebRtc } from "pages/web_rtc";
