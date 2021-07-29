@@ -6,10 +6,11 @@ export interface Subscription {
 }
 
 let pusher: Pusher | null;
+const key = process.env.REACT_APP_PUSHER_KEY || "";
 
 const getPusher = (): Pusher => {
   if (pusher) return pusher;
-  const p = new Pusher("d380e668bc16de80de97", {
+  const p = new Pusher(key, {
     cluster: "ap3",
   });
   pusher = p;

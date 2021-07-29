@@ -5,7 +5,7 @@ let localStream: MediaStream | null = null;
 let peer: Peer | null = null;
 let room: SfuRoom | null = null;
 
-const key = "7f49904a-6ae1-41d1-92ea-a7511923d018";
+const key = process.env.REACT_APP_SKYWAY_KEY || "";
 
 export const getRemoteStreams = () => remoteStreams;
 export const getMedia = async () => {
