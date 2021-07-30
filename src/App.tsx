@@ -17,6 +17,7 @@ import { ErrorCheck } from "pages/error_check";
 Bugsnag.start({
   apiKey: "7af284a0a4ff4c45e09e4ff63d48ee46",
   plugins: [new BugsnagPluginReact()],
+  enabledReleaseStages: ["production"],
 });
 
 const Error = () => <div>error</div>;
