@@ -1,8 +1,33 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React, { FC, ReactElement } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  RouteProps,
+} from "react-router-dom";
 import { Realtime } from "pages/realtime";
 import { WebRtc } from "pages/web_rtc";
 import { CardBoard } from "pages/card_board";
+import { ErrorBoundary } from "react-error-boundary";
+
+const Error = () => <div>error</div>;
+const SkywayError = () => <div>Limit of skyway free plan</div>;
+
+interface RouteWrapProps extends RouteProps {
+  fallback: ReactElement;
+}
+
+const RouteWithErrorBoundary: FC<RouteWrapProps> = ({
+  children,
+  fallback,
+  ...routeProps
+}) => {
+  return (
+    <Route {...routeProps}>
+      <ErrorBoundary fallback={fallback}>{children}</ErrorBoundary>
+    </Route>
+  );
+};
 
 function App() {
   return (
@@ -23,15 +48,17 @@ function App() {
             </ul>
           </nav>
 
-          <Route path="/realtime">
+          <RouteWithErrorBoundary path="/realtime" fallback={<Error />}>
             <Realtime />
-          </Route>
-          <Route path="/webrtc">
+          </RouteWithErrorBoundary>
+
+          <RouteWithErrorBoundary path="/webrtc" fallback={<SkywayError />}>
             <WebRtc />
-          </Route>
-          <Route path="/board">
+          </RouteWithErrorBoundary>
+
+          <RouteWithErrorBoundary path="/board" fallback={<Error />}>
             <CardBoard />
-          </Route>
+          </RouteWithErrorBoundary>
         </div>
       </Router>
     </div>
