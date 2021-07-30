@@ -5,7 +5,7 @@ export const ErrorCheck = () => {
   if (renderError) throw new Error("render error desu");
 
   const rejectPromise = () => {
-    Promise.reject("promise reject desu");
+    Promise.reject(new Error("promise reject desu"));
   };
   const throwError = () => {
     throw new Error("throw done desu");
