@@ -2,13 +2,19 @@ import { useEffect, useMemo, useRef, useState, VFC } from "react";
 
 import { Subscription, getSubscription, unsubscribe } from "infra/web_socket";
 import { Message } from "interfaces/message";
+import { useErrorHandler } from "react-error-boundary";
 
 const chanName = "my-channel";
 const evName = "my-event";
 
 export const Realtime: VFC = () => {
+  const handleError = useErrorHandler();
   const ref = useRef<Subscription>(getSubscription(chanName));
   useEffect(() => {
+    fetch(
+      "https://asia-northeast1-react-samples-321512.cloudfunctions.net/ExecutionCount"
+    ).catch(handleError);
+
     return () => unsubscribe(chanName);
   }, []);
   return <Messages subscription={ref.current} />;
