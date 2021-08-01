@@ -7,6 +7,7 @@ import {
   Tooltip,
   Typography,
   IconButton,
+  Link,
 } from "@material-ui/core";
 import { GitHub } from "@material-ui/icons";
 
@@ -22,6 +23,16 @@ export const AppBar: VFC = () => {
           @nishisuke's react demos
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
+        <Typography variant="body2" component="div">
+          <Link
+            target="_blank"
+            href="https://github.com/nishisuke/calentasks"
+            color="textPrimary"
+          >
+            PWA Calendar & TODOs App
+          </Link>
+        </Typography>
+        <Box sx={{ width: 8 }} />
         <Tooltip title="Show source in GitHub">
           <IconButton size="large" color="default" onClick={goGH}>
             <GitHub />
