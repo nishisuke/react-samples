@@ -16,7 +16,7 @@ export const Realtime: VFC = () => {
     ).catch(handleError);
 
     return () => unsubscribe(chanName);
-  }, []);
+  }, [handleError]);
   return <Messages subscription={ref.current} />;
 };
 
